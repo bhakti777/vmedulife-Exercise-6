@@ -1,0 +1,39 @@
+.setnavbar{
+    height:40px;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-between;
+}
+
+.tablemargin{
+    margin-top: 20px;
+}
+
+.pagecontainer{
+    margin-top: 50px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.tablescroll{
+    overflow-x: auto;
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+.th{
+    width: 40%;
+}
+
+.setAssetMargin{
+    margin-top: 40px;
+}
+
+.input{
+    width:50px;
+}
+.th{
+    
+}
