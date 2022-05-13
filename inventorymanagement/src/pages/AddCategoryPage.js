@@ -8,21 +8,22 @@ class AddCategoryPage extends Component {
     super(props);
 
     this.state = {
-      categoryList: {
-      },
+      stateCategory: {},
 
       addNewCategory: false,
 
       newCategory: {
-        categoryId:0,
+        categoryId: 0,
         categoryName: "",
       },
     };
   }
 
-  onChangeHandler = (event) => {
+  onChangeHandler = (event, categoryId) => {
+    let stateCategory = this.state.stateCategory;
+    stateCategory[categoryId].categoryName = event.target.value;
     this.setState({
-      stateCategory: event.target.value,
+      stateCategory,
     });
   };
 
@@ -33,48 +34,55 @@ class AddCategoryPage extends Component {
   };
 
   onUpdateCategory = (event) => {
-    console.log("old category",this.state.newCategory)
-    console.log("new category", {...this.state.newCategory, categoryName:event.target.value})
+    console.log("old category", this.state.newCategory);
+    console.log("new category", {
+      ...this.state.newCategory,
+      categoryName: event.target.value,
+    });
     this.setState({
-      newCategory: {...this.state.newCategory,categoryName:event.target.value }
+      newCategory: {
+        ...this.state.newCategory,
+        categoryName: event.target.value,
+      },
     });
   };
 
   onClickSave = () => {
-    let categorylistClone= this.state.categoryList;
-    let newIndex = Object.keys(categorylistClone).length+1;
-    categorylistClone[newIndex] = {
-      categoryId:newIndex,
-      categoryName:this.state.newCategory.categoryName
+    alert("Category added successfully !");
+
+    let stateCategoryClone = this.state.stateCategory;
+    let newIndex = Object.keys(stateCategoryClone).length + 1;
+    stateCategoryClone[newIndex] = {
+      categoryId: newIndex,
+      categoryName: this.state.newCategory.categoryName,
     };
 
     this.setState({
-     categoryList:categorylistClone
+      stateCategory: stateCategoryClone,
     });
   };
 
   editCategory = (categoryId) => {
-    let categoryList = this.state.categoryList;
+    let stateCategory = this.state.stateCategory;
 
-    categoryList[categoryId].editMode = true;
+    stateCategory[categoryId].editMode = true;
 
     this.setState({
-      categoryList,
-      editMode:true
+      stateCategory,
+      editMode: true,
     });
   };
 
   handleDelete(indexToDelete) {
-    let categoryList = this.state.categoryList;
-    categoryList.splice(indexToDelete, 1);
-  
+    let stateCategory = this.state.stateCategory;
+    delete stateCategory[indexToDelete];
     this.setState({
-      categoryList: categoryList
+      stateCategory: stateCategory,
     });
   }
 
   render() {
-    const { categoryList, addNewCategory, newCategory, editMode } = this.state;
+    const { stateCategory, addNewCategory, newCategory, editMode } = this.state;
     return (
       <>
         <div className="flex">
@@ -97,8 +105,14 @@ class AddCategoryPage extends Component {
             </thead>
 
             <tbody>
-              {Object.values(categoryList).map((category) => {
+              {Object.values(stateCategory).map((category) => {
+                
+                
+                
+                
                 return (
+                  
+                  
                   <>
                     <tr>
                       <td>{category.categoryId}</td>
@@ -107,7 +121,9 @@ class AddCategoryPage extends Component {
                           <input
                             type="text"
                             defaultValue={category.categoryName}
-                            onChange={this.onChangeHandler}
+                            onChange={() =>
+                              this.onChangeHandler(category.categoryId)
+                            }
                           />
                         ) : (
                           category.categoryName
@@ -118,11 +134,17 @@ class AddCategoryPage extends Component {
                           <button
                             type="button"
                             class="btn btn-light"
-                            onClick={() => this.editCategory(category.categoryId)}
+                            onClick={() =>
+                              this.editCategory(category.categoryId)
+                            }
                           >
                             <span class="bi bi-pencil"></span>
                           </button>
-                          <CloseButton onClick={()=>this.handleItemsDelete(category)}/>
+                          <CloseButton
+                            onClick={() =>
+                              this.handleDelete(category.categoryId)
+                            }
+                          />
                         </div>
                       </td>
                     </tr>
@@ -136,7 +158,7 @@ class AddCategoryPage extends Component {
                   <td>
                     <input
                       type="text"
-                      defaultValue={newCategory.categoryName}
+                      // defaultValue={newCategory.categoryName}
                       onChange={this.onUpdateCategory}
                     />
                   </td>
@@ -149,7 +171,14 @@ class AddCategoryPage extends Component {
                       >
                         <span class="bi bi-check"></span>
                       </button>
-                      <CloseButton onClick={()=> this.setState({addNewCategory:false, newCategory:{categoryId:0,categoryName:""}}) } />
+                      <CloseButton
+                        onClick={() =>
+                          this.setState({
+                            addNewCategory: false,
+                            newCategory: { categoryId: 0, categoryName: "" },
+                          })
+                        }
+                      />
                     </div>
                   </td>
                 </tr>
