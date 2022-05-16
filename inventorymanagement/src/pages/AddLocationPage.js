@@ -4,6 +4,12 @@ import Button from "react-bootstrap/Button";
 import CloseButton from "react-bootstrap/CloseButton";
 
 class AddLocationPage extends Component {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+    }
+  }
   render() {
     return (
       <>

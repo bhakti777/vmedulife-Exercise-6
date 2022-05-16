@@ -11,7 +11,7 @@ class AddCategoryPage extends Component {
       stateCategory: {},
 
       addNewCategory: false,
-
+      selectedCategoryForEdit:'',
       newCategory: {
         categoryId: 0,
         categoryName: "",
@@ -59,18 +59,18 @@ class AddCategoryPage extends Component {
 
     this.setState({
       stateCategory: stateCategoryClone,
+      addNewCategory:false
     });
   };
 
   editCategory = (categoryId) => {
-    let stateCategory = this.state.stateCategory;
-
-    stateCategory[categoryId].editMode = true;
-
+    let categoryList = this.state.stateCategory;
+    categoryList[categoryId].categoryName = this.state.newCategory.categoryName;
+    
     this.setState({
-      stateCategory,
-      editMode: true,
-    });
+      stateCategory:categoryList,
+      editMode:false 
+    })
   };
 
   handleDelete(indexToDelete) {
@@ -80,6 +80,8 @@ class AddCategoryPage extends Component {
       stateCategory: stateCategory,
     });
   }
+
+  
 
   render() {
     const { stateCategory, addNewCategory, newCategory, editMode } = this.state;
@@ -106,50 +108,66 @@ class AddCategoryPage extends Component {
 
             <tbody>
               {Object.values(stateCategory).map((category) => {
-                
-                
-                
-                
-                return (
                   
-                  
-                  <>
+                if(this.state.editMode && this.state.selectedCategoryForEdit === category.categoryId){
+                  return (
                     <tr>
-                      <td>{category.categoryId}</td>
+                      <td></td>
                       <td>
-                        {category.editMode ? (
                           <input
                             type="text"
                             defaultValue={category.categoryName}
-                            onChange={() =>
-                              this.onChangeHandler(category.categoryId)
-                            }
-                          />
-                        ) : (
-                          category.categoryName
-                        )}
+                            onChange={this.onUpdateCategory}
+                        />
+
                       </td>
                       <td>
-                        <div>
-                          <button
-                            type="button"
-                            class="btn btn-light"
-                            onClick={() =>
-                              this.editCategory(category.categoryId)
-                            }
-                          >
-                            <span class="bi bi-pencil"></span>
-                          </button>
-                          <CloseButton
-                            onClick={() =>
-                              this.handleDelete(category.categoryId)
-                            }
-                          />
-                        </div>
+                          <div>
+                              <button
+                                type="button"
+                                class="btn btn-light"
+                                onClick={()=> 
+                                  this.editCategory(category.categoryId)
+                                   }
+                                >
+                                <span class="bi bi-check"></span>
+                              </button>
+                              <CloseButton onClick={()=>{
+                                this.setState({
+                                  editMode:false
+                                })
+                              }} />
+                          </div>
                       </td>
                     </tr>
-                  </>
-                );
+                  )
+                }else{
+                  return (
+                  
+
+                    <>
+                      <tr>
+                        <td>{category.categoryId}</td>
+                        <td>{category.categoryName}</td>
+                        <td>
+                          <div>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              onClick={()=> this.setState({editMode:true, selectedCategoryForEdit:category.categoryId})}
+                            >
+                              <span class="bi bi-pencil"></span>
+                            </button>
+                            <CloseButton onClick={()=> this.handleDelete(category.categoryId)} />
+                          </div>
+  
+                        </td>
+                      </tr>   
+                    </>
+                  );  
+                }
+
+                
               })}
 
               {addNewCategory && (
