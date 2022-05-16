@@ -19,21 +19,13 @@ class AddCategoryPage extends Component {
     };
   }
 
-  onChangeHandler = (event, categoryId) => {
-    let stateCategory = this.state.stateCategory;
-    stateCategory[categoryId].categoryName = event.target.value;
-    this.setState({
-      stateCategory,
-    });
-  };
-
   onClickAdd = () => {
     this.setState({
       addNewCategory: true,
     });
   };
 
-  onUpdateCategory = (event) => {
+  onChangeHandler = (event) => {
     console.log("old category", this.state.newCategory);
     console.log("new category", {
       ...this.state.newCategory,
@@ -84,7 +76,7 @@ class AddCategoryPage extends Component {
   
 
   render() {
-    const { stateCategory, addNewCategory, newCategory, editMode } = this.state;
+    const { stateCategory, addNewCategory } = this.state;
     return (
       <>
         <div className="flex">
@@ -117,7 +109,7 @@ class AddCategoryPage extends Component {
                           <input
                             type="text"
                             defaultValue={category.categoryName}
-                            onChange={this.onUpdateCategory}
+                            onChange={this.onChangeHandler}
                         />
 
                       </td>
@@ -177,7 +169,8 @@ class AddCategoryPage extends Component {
                     <input
                       type="text"
                       // defaultValue={newCategory.categoryName}
-                      onChange={this.onUpdateCategory}
+                      onChange={this.onChangeHandler}
+                      //onchange fetch input  and update value 
                     />
                   </td>
                   <td>
