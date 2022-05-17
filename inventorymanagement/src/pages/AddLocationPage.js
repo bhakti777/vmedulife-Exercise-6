@@ -37,8 +37,7 @@ class AddLocationPage extends Component {
       },
     },()=>{
       console.log(this.state.newLocation)
-    });
-
+    }); //callback to check on console
   };
 
   onClickSave = () => {
