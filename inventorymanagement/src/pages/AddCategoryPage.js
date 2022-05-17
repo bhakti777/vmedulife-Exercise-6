@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import CloseButton from "react-bootstrap/CloseButton";
+import Modal from "react-bootstrap/Modal";
+
 
 class AddCategoryPage extends Component {
   constructor(props) {
@@ -16,8 +18,22 @@ class AddCategoryPage extends Component {
         categoryId: 0,
         categoryName: "",
       },
+      showPopup:false
     };
   }
+
+handleClosePopup=()=>{
+  this.setState({
+    showPopup:false
+  })
+}
+
+handleShowPopup=(indexToDelete)=>{
+  this.setState({
+    showPopup:true,
+    selectedIdforDelete:indexToDelete
+  })
+}
 
   onClickAdd = () => {
     this.setState({
@@ -76,7 +92,7 @@ class AddCategoryPage extends Component {
   
 
   render() {
-    const { stateCategory, addNewCategory } = this.state;
+    const { stateCategory, addNewCategory,showPopup } = this.state;
     return (
       <>
         <div className="flex">
@@ -118,12 +134,12 @@ class AddCategoryPage extends Component {
                           <div>
                               <button
                                 type="button"
-                                class="btn btn-light"
+                                className="btn btn-light"
                                 onClick={()=> 
                                   this.editCategory(category.categoryId)
                                    }
                                 >
-                                <span class="bi bi-check"></span>
+                                <span className="bi bi-check"></span>
                               </button>
                               <CloseButton onClick={()=>{
                                 this.setState({
@@ -136,8 +152,6 @@ class AddCategoryPage extends Component {
                   )
                 }else{
                   return (
-                  
-
                     <>
                       <tr>
                         <td>{category.categoryId}</td>
@@ -146,21 +160,25 @@ class AddCategoryPage extends Component {
                           <div>
                             <button
                               type="button"
-                              class="btn btn-light"
+                              className="btn btn-light"
                               onClick={()=> this.setState({editMode:true, selectedCategoryForEdit:category.categoryId})}
                             >
-                              <span class="bi bi-pencil"></span>
+                              <span className="bi bi-pencil"></span>
                             </button>
-                            <CloseButton onClick={()=> this.handleDelete(category.categoryId)} />
+                            <CloseButton onClick={
+                              ()=> {
+                               this.handleShowPopup(category.categoryId)
+                              // this.handleDelete(category.categoryId)
+                            }
+                          } 
+                            />
                           </div>
   
                         </td>
                       </tr>   
                     </>
-                  );  
+                  );        
                 }
-
-                
               })}
 
               {addNewCategory && (
@@ -178,10 +196,10 @@ class AddCategoryPage extends Component {
                     <div>
                       <button
                         type="button"
-                        class="btn btn-light"
+                        className="btn btn-light"
                         onClick={this.onClickSave}
                       >
-                        <span class="bi bi-check"></span>
+                        <span className="bi bi-check"></span>
                       </button>
                       <CloseButton
                         onClick={() =>
@@ -199,9 +217,31 @@ class AddCategoryPage extends Component {
           </Table>
         </div>
 
+
         <Button variant="light" size="sm" onClick={this.onClickAdd}>
           + Add new Category
         </Button>
+
+
+    {showPopup &&
+    <div>
+    <Modal show={showPopup} onHide={this.handleClosePopup}>
+      <Modal.Body>
+       <div className="spaceBetween">
+         <span><p>Are you sure you want to remove the item?</p></span>
+         <span><CloseButton onClick={this.handleClosePopup}/></span>
+       </div>
+      </Modal.Body>
+
+      <Modal.Footer>
+          <Button variant="dark" size="sm" onClick={  ()=>  this.handleDelete(this.state.selectedIdforDelete)}
+          >yes</Button>
+          <Button variant="primary" size="sm" onClick={this.handleClosePopup}>No</Button>
+     </Modal.Footer>
+     </Modal>
+    </div>
+  } 
+      
       </>
     );
   }
