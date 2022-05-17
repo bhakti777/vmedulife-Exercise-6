@@ -10,6 +10,7 @@ class AddLocationPage extends Component {
     this.state = {
       stateLocation: {},
       addNewLocation: false,
+      selectedLocationForEdit: "",
       newLocation: {
         locationId: 0,
         locationName: "",
@@ -30,14 +31,17 @@ class AddLocationPage extends Component {
       locationName: event.target.value,
     });
 
-    this.setState({
-      newLocation: {
-        ...this.state.newLocation,
-        locationName: event.target.value,
+    this.setState(
+      {
+        newLocation: {
+          ...this.state.newLocation,
+          locationName: event.target.value,
+        },
       },
-    },()=>{
-      console.log(this.state.newLocation)
-    }); //callback to check on console
+      () => {
+        console.log(this.state.newLocation);
+      }
+    ); //callback to check on console
   };
 
   onClickSave = () => {
@@ -50,13 +54,35 @@ class AddLocationPage extends Component {
       locationName: this.state.newLocation.locationName,
     };
 
-    this.setState({
-      stateLocation: stateLocationClone,
-      addNewLocation: false,
-    },()=>{
-      console.log("Location List", this.state.stateLocation)
-    });
+    this.setState(
+      {
+        stateLocation: stateLocationClone,
+        addNewLocation: false,
+      },
+      () => {
+        console.log("Location List", this.state.stateLocation);
+      }
+    );
   };
+
+  editLocation = (locationId) => {
+  let locationList=this.state.stateLocation;
+  locationList[locationId].locationName=this.state.newLocation.locationName
+  this.setState({
+    stateLocation:locationList,
+    editMode:false
+  })
+  console.log("new location names:",this.state.newLocation);
+  };
+
+  handleDelete=(indexToDelete)=>{
+   let stateLocationClone=this.state.stateLocation
+   delete stateLocationClone[indexToDelete]
+   this.setState({
+     stateLocation:stateLocationClone
+   })
+  }
+
 
   render() {
     const { addNewLocation, stateLocation } = this.state;
@@ -80,8 +106,11 @@ class AddLocationPage extends Component {
 
             <tbody>
               {Object.values(stateLocation).map((location) => {
-                return (
-                  <>
+                if (
+                  this.state.editMode &&
+                  this.state.selectedLocationForEdit === location.locationId
+                ) {
+                  return (
                     <tr>
                       <td></td>
                       <td>
@@ -93,32 +122,36 @@ class AddLocationPage extends Component {
                       </td>
                       <td>
                         <div>
-                          <button type="button" class="btn btn-light">
-                            <span class="bi bi-pencil"></span>
+                          <button type="button" class="btn btn-light" onClick={()=>this.editLocation(location.locationId)}>
+                            <span class="bi bi-check"></span>
                           </button>
-                          <CloseButton />
+                          <CloseButton onClick={()=>this.setState({editMode:false})}/>
                         </div>
                       </td>
                     </tr>
-
-                    <tr>
-                      <td>{location.locationId}</td>
-                      <td>{location.locationName}</td>
-                      <td>
-                        <div>
-                          <button
-                            type="button"
-                            class="btn btn-light"
-                            onClick={this.onClickSave}
-                          >
-                            <span class="bi bi-pencil"></span>
-                          </button>
-                          <CloseButton />
-                        </div>
-                      </td>
-                    </tr>
-                  </>
-                );
+                  );
+                } else {
+                  return (
+                    <>
+                      <tr>
+                        <td>{location.locationId}</td>
+                        <td>{location.locationName}</td>
+                        <td>
+                          <div>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              onClick={()=>this.setState({editMode:true,selectedLocationForEdit:location.locationId})}
+                            >
+                              <span class="bi bi-pencil"></span>
+                            </button>
+                            <CloseButton onClick={()=>this.handleDelete(location.locationId)}/>
+                          </div>
+                        </td>
+                      </tr>
+                    </>
+                  );
+                }
               })}
 
               {addNewLocation && (
@@ -137,7 +170,10 @@ class AddLocationPage extends Component {
                       >
                         <span class="bi bi-check"></span>
                       </button>
-                      <CloseButton />
+                      <CloseButton onClick={()=>this.setState({
+                        addNewLocation:false,
+                        newLocation:{locationId:0,location:""}
+                      })}/>
                     </div>
                   </td>
                 </tr>

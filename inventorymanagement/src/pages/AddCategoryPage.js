@@ -66,10 +66,10 @@ class AddCategoryPage extends Component {
   };
 
   handleDelete(indexToDelete) {
-    let stateCategory = this.state.stateCategory;
-    delete stateCategory[indexToDelete];
+    let stateCategoryClone = this.state.stateCategory;
+    delete stateCategoryClone[indexToDelete];
     this.setState({
-      stateCategory: stateCategory,
+      stateCategory: stateCategoryClone,
     });
   }
 
@@ -100,7 +100,8 @@ class AddCategoryPage extends Component {
 
             <tbody>
               {Object.values(stateCategory).map((category) => {
-                  
+                  //state is an object and editMode is default state
+                  //...it is undefined by default considered false
                 if(this.state.editMode && this.state.selectedCategoryForEdit === category.categoryId){
                   return (
                     <tr>
