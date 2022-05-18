@@ -18,7 +18,8 @@ class AddCategoryPage extends Component {
         categoryId: 0,
         categoryName: "",
       },
-      showPopup:false
+      showPopup:false,
+      editMode:false
     };
   }
 
@@ -31,7 +32,7 @@ handleClosePopup=()=>{
 handleShowPopup=(indexToDelete)=>{
   this.setState({
     showPopup:true,
-    selectedIdforDelete:indexToDelete
+    selectedIdforDelete:indexToDelete   //maintaining new state ,stored selected id to delete
   })
 }
 
@@ -59,8 +60,8 @@ handleShowPopup=(indexToDelete)=>{
     alert("Category added successfully !");
 
     let stateCategoryClone = this.state.stateCategory;
-    let newIndex = Object.keys(stateCategoryClone).length + 1;
-    stateCategoryClone[newIndex] = {
+    let newIndex = Object.keys(stateCategoryClone).length + 1;  // calculating previous key length ..added newIndex on every click by incrementing length 
+    stateCategoryClone[newIndex] = {  //passed newIndex to clone and value is updated
       categoryId: newIndex,
       categoryName: this.state.newCategory.categoryName,
     };
